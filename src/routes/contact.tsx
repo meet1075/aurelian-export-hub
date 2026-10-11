@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/site-shell';
 import { products,pageHead } from '@/lib/products';
-export const Route=createFileRoute('/contact')({validateSearch:(search:Record<string,unknown>)=>({product:typeof search.product==='string'?search.product:undefined}),head:()=>pageHead('Contact & request a quote','Discuss your ingredient requirements, estimated quantity, customised specifications and export needs with Aurelian International.'),component:Contact});
+export const Route=createFileRoute('/contact')({validateSearch:(search:Record<string,unknown>):{product?:string}=>({product:typeof search['product']==='string'?search['product']:undefined}),head:()=>pageHead('Contact & request a quote','Discuss your ingredient requirements, estimated quantity, customised specifications and export needs with Aurelian International.'),component:Contact});
 function Contact(){const {product}=Route.useSearch();const [selected,setSelected]=useState<string[]>(product?[product]:[]);const [submitted,setSubmitted]=useState(false);const [draft,setDraft]=useState('');
 function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();const data=new FormData(e.currentTarget);const text=['AURELIAN INTERNATIONAL — BUYER ENQUIRY',...Array.from(data.entries()).filter(([k])=>k!=='products').map(([k,v])=>`${k}: ${v}`),`Products: ${selected.join(', ')||'Please advise'}`].join('\n');setDraft(text);setSubmitted(true);toast.success('Your enquiry draft is ready. Download it below.');}
 function download(){const url=URL.createObjectURL(new Blob([draft],{type:'text/plain'}));const a=document.createElement('a');a.href=url;a.download='aurelian-enquiry.txt';a.click();URL.revokeObjectURL(url)}
